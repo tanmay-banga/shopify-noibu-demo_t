@@ -26,6 +26,13 @@
 {% endcomment %}
 
 {%- liquid
+  # The first, eagerly loaded image is the product page's LCP element: fetch it first.
+  assign fetch_priority = 'auto'
+  assign preload = false
+  if lazy_load == false and position == 1
+    assign fetch_priority = 'high'
+    assign preload = true
+  endif
   unless lazy_load == false
     assign lazy = 'lazy'
   endunless
@@ -84,6 +91,8 @@
         | image_tag:
           class: image_class,
           loading: lazy,
+          fetchpriority: fetch_priority,
+          preload: preload,
           sizes: sizes,
           widths: '246, 493, 600, 713, 823, 990, 1100, 1206, 1346, 1426, 1646, 1946'
       }}
